@@ -13,11 +13,12 @@ body {
 /* ---------- Cartões ---------- */
 .card {
     border-radius: 0.75rem;
+    overflow: hidden;
 }
 
 .card-header {
-    border-top-left-radius: 0.75rem !important;
-    border-top-right-radius: 0.75rem !important;
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
 }
 
 /* ---------- Relógio ---------- */

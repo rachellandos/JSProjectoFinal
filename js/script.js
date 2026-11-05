@@ -4,11 +4,21 @@
 //********************************************* */
 //********************************************* */
 
-document.getElementById('theme-toggle').addEventListener('click', function () {
-    let body = document.querySelector('body')
-    console.log(body)
-    document.body.classList.toggle('modo-noturno');
+const themeBtn = document.getElementById('theme-toggle')
+
+if (localStorage.getItem('modo') == 'noturno') {
+    document.body.classList.add('modo-noturno')
+}
+themeBtn.addEventListener('click', function () {
+    document.body.classList.toggle('modo-noturno')
+
+    if (document.body.classList.contains('modo-noturno')) {
+        localStorage.setItem('modo', 'noturno')
+    } else {
+        localStorage.setItem('modo', 'claro')
+    }
 })
+
 
 //********************************************* */
 //********************************************* */
@@ -29,19 +39,15 @@ console.log(logoutBtn)
 //********************** Log in */
 function login() {
     if (localStorage.getItem("user")) {
-        let UserName = localStorage.getItem("user")
         greetingGuest.classList.add("d-none")
         greeting.classList.remove("d-none")
-        greetingName.textContent = UserName
+        greetingName.textContent = localStorage.getItem("user")
         loginBtn.classList.add("d-none")
         logoutBtn.classList.remove("d-none")
-    } else {
-        let UserName = document.querySelector("#login-name").value
-        //armazenar no local storage
-        localStorage.setItem("user", UserName);
     }
 }
 
+login()
 if (enterBtn) {
     enterBtn.addEventListener("click", () => login());
     // loginBtn.addEventListener("click", lunchTime);
@@ -53,14 +59,19 @@ if (myLoginForm) {
 
         const dataFromForm = new FormData(this);
 
-        if (dataFromForm.get("user") != "" && dataFromForm.get("password") != "") {
-            localStorage.setItem("user", dataFromForm.get("user"));
+        if (dataFromForm.get("user").trim() != "") {
+            if (dataFromForm.get("password").trim() == "") {
+                alert("A palavra passe não pode estar vazia e não pode incluir unicamente espaços.")
+            }
+            else {
+                localStorage.setItem("user", dataFromForm.get("user"));
 
-            this.reset();
-            document.querySelector("#login-modal .btn-close").click(); // fecha o modal
-            login();
+                this.reset();
+                document.querySelector("#login-modal .btn-close").click(); // fecha o modal
+                login();
+            }
         }
-        else if (dataFromForm.get("user") == "" || dataFromForm.get("password") == "") {
+        else {
             alert("Ambos campos são obrigatórios! Tente novamente.")
         }
 
@@ -80,18 +91,18 @@ if (logoutBtn) {
 //**************ADICIONAR TAREFA*************** */
 //********************************************* */
 //********************************************* */
-const input = document.querySelector("#task-input");
-const template = document.querySelector("#task-template");
-const list = document.querySelector("#task-list");
-let taskForm = document.querySelector("#task-form")
-let countTotal = document.querySelector('#count-total')
+const inputTask = document.querySelector("#task-input");
+const listContainer = document.querySelector("#task-list");
+const taskForm = document.querySelector("#task-form")
+const countTotal = document.querySelector('#count-total')
 console.log(countTotal)
-let countActive = document.querySelector('#count-active')
-
+const countActive = document.querySelector('#count-active')
+const countCompleted = document.querySelector('#count-completed')
+const emptyMessage = document.querySelector('#empty-message')
 
 taskForm.addEventListener('submit', function (e) {
     e.preventDefault();
-    if (input.value.trim() == "") {
+    if (inputTask.value.trim() == "") {
         alert("digite pelo menos um caractere")
     }
     else {
@@ -100,50 +111,62 @@ taskForm.addEventListener('submit', function (e) {
 
         li.innerHTML = `
             <input class="form-check-input task-check" type="checkbox" aria-label="Marcar como concluída">
-            <span class="task-text flex-grow-1">`+input.value+ `</span>
+            <span class="task-text flex-grow-1">`+ inputTask.value + `</span>
             <div class="btn-group btn-group-sm">
                 <button type="button" class="btn btn-outline-secondary btn-edit">Editar</button>
                 <button type="button" class="btn btn-outline-danger btn-delete">Remover</button>
             </div>`
-        list.appendChild(li);
+        listContainer.appendChild(li);
 
         countTotal.textContent = Number(countTotal.textContent) + 1
         countActive.textContent = Number(countActive.textContent) + 1
+        emptyMessage.classList.add('d-none')
+        this.reset()
     }
 })
 
-let editBtn = document.querySelectorAll('.btn-edit')
-for (let button of editBtn) {
-    button.addEventListener('click', function () {
+//********************************************* */
+//********************************************* */
+//************* ATUALIZAR TAREFA ************** */
+//********************************************* */
+//********************************************* */
+
+listContainer.addEventListener('click', function (e) {
+    const item = e.target.closest('.task-item')
+
+    // EDITAR
+    if (e.target.classList.contains('btn-edit')) {
         let newTask = prompt("Qual o novo texto que quer colocar?")
-        this.closest('.task-item').querySelector('.task-text').textContent = newTask
-    })
-}
 
-let removeBtn = document.querySelectorAll('.btn-delete')
-for (let button of removeBtn) {
-    button.addEventListener('click', function () {
-        this.closest('.task-item').remove();
+        if (newTask !== null && newTask.trim() !== "") {
+            item.querySelector('.task-text').textContent = newTask
+        }
+    }
+    // REMOVER
+    else if (e.target.classList.contains('btn-delete')) {
+        item.remove();
         countTotal.textContent = Number(countTotal.textContent) - 1
+        if (countTotal.textContent == 0) {
+            emptyMessage.classList.remove('d-none')
 
-        if (this.closest('li').classList.contains('completed')) {
-            countCompleted.textContent = Number(countCompleted.textContent)
+        }
+
+        if (item.classList.contains('completed')) {
+            countCompleted.textContent = Number(countCompleted.textContent) - 1
         }
         else {
             countActive.textContent = Number(countActive.textContent) - 1
         }
-    })
-}
+    }
+})
 
 //********************************************* */
 //********************************************* */
-//**************CONTADOR TAREFAS*************** */
+//*********MARCAR TAREFAS COMPLETADAS********** */
 //********************************************* */
 //********************************************* */
-let taskList = document.querySelector("#task-list")
-let countCompleted = document.querySelector('#count-completed')
 
-taskList.addEventListener('change', function (e) {
+listContainer.addEventListener('change', function (e) {
     if (!e.target.classList.contains("task-check")) return
 
     if (e.target.checked) {
@@ -155,8 +178,6 @@ taskList.addEventListener('change', function (e) {
         countActive.textContent = Number(countActive.textContent) + 1
         countCompleted.textContent = Number(countCompleted.textContent) - 1
     }
-
-
 })
 
 
@@ -166,11 +187,7 @@ taskList.addEventListener('change', function (e) {
 //********************************************* */
 //********************************************* */
 
-let filtroTarefas = document.querySelector('#filters')
 let itemsTarefas = document.querySelectorAll('.filter-btn')
-console.log(filtroTarefas)
-
-
 
 for (let item of itemsTarefas) {
     item.addEventListener("click", function (e) {
@@ -200,20 +217,25 @@ for (let item of itemsTarefas) {
     })
 }
 
+
 //********************************************* */
 //********************************************* */
-//******************* Editar ****************** */
+//**************** DATA e HORA **************** */
 //********************************************* */
 //********************************************* */
 
+const currentDate = document.querySelector('#current-date')
+const currentTime = document.querySelector('#current-time')
 
+setInterval(function () {
+    const data = new Date().toLocaleDateString("pt-PT", { day: "2-digit", month: "2-digit", year: "2-digit" })
+    const hora = new Date().toLocaleTimeString("pt-PT", { hour: "numeric", minute: "2-digit", second: "2-digit" })
 
+    currentDate.textContent = data
+    currentTime.textContent = hora
 
-// for (let button of editBtn){
-// button.addEventListener('click', function() {
-//     alert("Qual o novo texto que quer colocar?")
-// })
-// }
+});
+
 
 
 //********************************************* */
@@ -221,7 +243,6 @@ for (let item of itemsTarefas) {
 //******************** API ******************** */
 //********************************************* */
 //********************************************* */
-
 const weatherLoading = document.querySelector("#weather-loading");
 const weatherError = document.querySelector("#weather-error");
 const weatherContent = document.querySelector("#weather-content");
