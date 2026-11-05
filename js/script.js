@@ -91,21 +91,21 @@ let countActive = document.querySelector('#count-active')
 
 taskForm.addEventListener('submit', function (e) {
     e.preventDefault();
-
     if (input.value.trim() == "") {
         alert("digite pelo menos um caractere")
     }
     else {
-        const clone = "<li class="list-group-item task-item d-flex align-items-center gap-3">
+        const li = document.createElement("li")
+        li.className = "list-group-item task-item d-flex align-items-center gap-3"
+
+        li.innerHTML = `
             <input class="form-check-input task-check" type="checkbox" aria-label="Marcar como concluída">
-            <span class="task-text flex-grow-1"></span>
+            <span class="task-text flex-grow-1">`+input.value+ `</span>
             <div class="btn-group btn-group-sm">
                 <button type="button" class="btn btn-outline-secondary btn-edit">Editar</button>
                 <button type="button" class="btn btn-outline-danger btn-delete">Remover</button>
-            </div>
-        </li>";
-        clone.querySelector(".task-text").textContent = input.value;
-        list.appendChild(clone);
+            </div>`
+        list.appendChild(li);
 
         countTotal.textContent = Number(countTotal.textContent) + 1
         countActive.textContent = Number(countActive.textContent) + 1
@@ -113,7 +113,6 @@ taskForm.addEventListener('submit', function (e) {
 })
 
 let editBtn = document.querySelectorAll('.btn-edit')
-console.log(editBtn)
 for (let button of editBtn) {
     button.addEventListener('click', function () {
         let newTask = prompt("Qual o novo texto que quer colocar?")
