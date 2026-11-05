@@ -5,83 +5,84 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Gestor de Tarefas Inteligente</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
-    <script src="js/script.js" defer></script>
+    <!-- Agora tem de ser módulo para poder importar o Bootstrap -->
+    <script type="module" src="js/script.js"></script>
 </head>
 
 <body>
 
     <!-- ===================== BARRA SUPERIOR ===================== -->
-    <nav class="navbar border-bottom bg-body-tertiary sticky-top">
-        <div class="container">
+    <nav class="navbar border-bottom bg-1 sticky-top">
+        <div class="container d-flex justify-content-between align-items-center">
             <span class="navbar-brand fw-semibold">Gestor de Tarefas Inteligente</span>
-            <div class="d-flex align-items-center gap-2">
-                <button type="button" id="theme-toggle" class="btn btn-outline-secondary btn-sm">Tema escuro</button>
+            <div class="d-flex align-items-center gap-3">
+                <button type="button" id="theme-toggle" class="btn-outline theme-secondary btn-sm">Tema escuro</button>
 
                 <!-- Visível antes do login -->
-                <button type="button" id="login-open-btn" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                    data-bs-target="#login-modal">Iniciar sessão</button>
+                <button type="button" id="login-open-btn" class="btn-solid theme-accent btn-sm"
+                    data-bs-toggle="dialog" data-bs-target="#login-modal">Iniciar sessão</button>
 
                 <!-- Visível depois do login (começa escondido) -->
-                <button type="button" id="logout-btn" class="btn btn-outline-danger btn-sm d-none">Terminar
+                <button type="button" id="logout-btn" class="btn-outline theme-danger btn-sm d-none">Terminar
                     sessão</button>
             </div>
         </div>
     </nav>
 
     <!-- ===================== PÁGINA PRINCIPAL ===================== -->
-    <main class="container py-4" id="app-section">
+    <main class="container py-7" id="app-section">
 
         <!-- Saudação + data/hora -->
-        <header class="row g-3 align-items-center mb-4">
-            <div class="col-md-7">
+        <header class="row g-5 align-items-center mb-7">
+            <div class="md:col-7">
                 <h2 id="greeting" class="h3 mb-0 d-none">Olá, <span id="user-name"></span></h2>
                 <h2 id="greeting-guest" class="h3 mb-0">Bem-vindo</h2>
             </div>
-            <div class="col-md-5 text-md-end">
-                <div id="current-time" class="fs-4 fw-semibold"></div>
-                <div id="current-date" class="text-body-secondary"></div>
+            <div class="md:col-5 md:text-end">
+                <div id="current-time" class="fs-xl fw-semibold"></div>
+                <div id="current-date" class="fg-2"></div>
             </div>
         </header>
 
-        <div class="row g-4">
+        <div class="row g-7">
 
             <!-- Coluna principal: tarefas -->
-            <div class="col-lg-8">
+            <div class="lg:col-8">
 
                 <!-- Formulário nova tarefa -->
-                <div class="card shadow-sm mb-4">
+                <div class="card shadow-sm mb-7">
                     <div class="card-body">
-                        <form id="task-form" class="row g-2" novalidate>
-                            <div class="col-sm-9">
+                        <form id="task-form" class="row g-3" novalidate>
+                            <div class="sm:col-9">
                                 <label for="task-input" class="visually-hidden">Nova tarefa</label>
                                 <input type="text" id="task-input" class="form-control"
                                     placeholder="O que tens para fazer?" required>
                             </div>
-                            <div class="col-sm-3 d-grid">
-                                <button type="submit" id="add-task-btn" class="btn btn-primary">Adicionar</button>
+                            <div class="sm:col-3 d-grid">
+                                <button type="submit" id="add-task-btn" class="btn-solid theme-accent">Adicionar</button>
                             </div>
                         </form>
-                        <div id="task-error" class="text-danger small mt-2 d-none"></div>
+                        <div id="task-error" class="fg-danger small mt-3 d-none"></div>
                     </div>
                 </div>
 
                 <!-- Contadores + filtros + lista -->
                 <div class="card shadow-sm">
-                    <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
-                        <div class="d-flex gap-2">
-                            <span class="badge text-bg-primary">Ativas: <span id="count-active">0</span></span>
-                            <span class="badge text-bg-success">Concluídas: <span id="count-completed">0</span></span>
-                            <span class="badge text-bg-secondary">Total: <span id="count-total">0</span></span>
+                    <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-3">
+                        <div class="gap-3">
+                            <span class="badge theme-accent">Ativas: <span id="count-active">0</span></span>
+                            <span class="badge theme-success">Concluídas: <span id="count-completed">0</span></span>
+                            <span class="badge theme-secondary">Total: <span id="count-total">0</span></span>
                         </div>
 
                         <div class="btn-group btn-group-sm" role="group" id="filters" aria-label="Filtros">
-                            <button type="button" class="btn btn-outline-primary filter-btn active"
+                            <button type="button" class="btn-outline theme-accent filter-btn active"
                                 data-filter="all">Todas</button>
-                            <button type="button" class="btn btn-outline-primary filter-btn"
+                            <button type="button" class="btn-outline theme-accent filter-btn"
                                 data-filter="active">Ativas</button>
-                            <button type="button" class="btn btn-outline-primary filter-btn"
+                            <button type="button" class="btn-outline theme-accent filter-btn"
                                 data-filter="completed">Concluídas</button>
                         </div>
                     </div>
@@ -89,23 +90,23 @@
                     <!-- O JS preenche aqui -->
                     <ul id="task-list" class="list-group list-group-flush"></ul>
 
-                    <div id="empty-message" class="text-center text-body-secondary py-4">
+                    <div id="empty-message" class="text-center fg-2 py-7">
                         Sem tarefas para mostrar.
                     </div>
                 </div>
             </div>
 
             <!-- Coluna lateral: API do tempo -->
-            <div class="col-lg-4">
+            <div class="lg:col-4">
                 <div class="card shadow-sm" id="weather-card">
                     <div class="card-header">Tempo atual</div>
                     <div class="card-body text-center">
-                        <div id="weather-loading" class="text-body-secondary">A carregar...</div>
-                        <div id="weather-error" class="text-danger d-none"></div>
+                        <div id="weather-loading" class="fg-2">A carregar...</div>
+                        <div id="weather-error" class="fg-danger d-none"></div>
                         <div id="weather-content" class="d-none">
                             <div id="weather-city" class="fw-semibold">Lisboa</div>
-                            <div id="weather-temp" class="display-4 fw-bold">--°C</div>
-                            <div id="weather-desc" class="text-body-secondary mb-2"></div>
+                            <div id="weather-temp" class="fs-5xl fw-bold">--°C</div>
+                            <div id="weather-desc" class="fg-2 mb-3"></div>
                         </div>
                     </div>
                 </div>
@@ -114,38 +115,35 @@
         </div>
     </main>
 
-    <!-- ===================== MODAL DE LOGIN ===================== -->
-    <div class="modal fade" id="login-modal" tabindex="-1" aria-labelledby="login-modal-title" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <form id="login-form" novalidate>
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="login-modal-title">Iniciar sessão</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="login-name" class="form-label">Nome</label>
-                            <input type="text" id="login-name" name="user" class="form-control" placeholder="O teu nome"
-                                required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="login-password" class="form-label">Palavra-passe</label>
-                            <input type="password" id="login-password" name="password" class="form-control"
-                                placeholder="Palavra-passe" required>
-                        </div>
-                        <div id="login-error" class="alert alert-danger py-2 mb-0 d-none" role="alert"></div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" id="login-btn" class="btn btn-primary">Entrar</button>
-                    </div>
-                </form>
-            </div>
+    <!-- ===================== DIÁLOGO DE LOGIN ===================== -->
+    <dialog class="dialog" id="login-modal" aria-labelledby="login-modal-title">
+        <div class="dialog-header">
+            <h2 class="dialog-title" id="login-modal-title">Iniciar sessão</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="dialog" aria-label="Fechar"></button>
         </div>
-    </div>
+        <div class="dialog-body">
+            <form id="login-form" novalidate>
+                <div class="mb-5">
+                    <label for="login-name" class="form-label">Nome</label>
+                    <input type="text" id="login-name" name="user" class="form-control" placeholder="O teu nome"
+                        required>
+                </div>
+                <div class="mb-5">
+                    <label for="login-password" class="form-label">Palavra-passe</label>
+                    <input type="password" id="login-password" name="password" class="form-control"
+                        placeholder="Palavra-passe" required>
+                </div>
+                <div id="login-error" class="alert theme-danger py-3 mb-0 d-none" role="alert"></div>
+            </form>
+        </div>
+        <div class="dialog-footer">
+            <button type="button" class="btn-solid theme-secondary" data-bs-dismiss="dialog">Cancelar</button>
+            <!-- Fora do <form> mas associado a ele, para não partir o layout do diálogo -->
+            <button type="submit" form="login-form" id="login-btn" class="btn-solid theme-accent">Entrar</button>
+        </div>
+    </dialog>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

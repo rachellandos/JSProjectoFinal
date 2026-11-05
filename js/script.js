@@ -234,7 +234,7 @@ setInterval(function () {
     currentDate.textContent = data
     currentTime.textContent = hora
 
-});
+}, 1000);
 
 
 
