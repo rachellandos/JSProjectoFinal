@@ -112,9 +112,9 @@ taskForm.addEventListener('submit', function (e) {
         li.innerHTML = `
             <input class="form-check-input task-check" type="checkbox" aria-label="Marcar como concluída">
             <span class="task-text flex-grow-1">`+ inputTask.value + `</span>
-            <div class="btn-group btn-group-sm">
-                <button type="button" class="btn btn-outline-secondary btn-edit">Editar</button>
-                <button type="button" class="btn btn-outline-danger btn-delete">Remover</button>
+            <div class="btn-group btn-group-sm gap-1">
+                <button type="button" class="btn btn-outline theme-secondary btn-edit">Editar</button>
+                <button type="button" class="btn btn-outline theme-danger btn-delete">Remover</button>
             </div>`
         listContainer.appendChild(li);
 
