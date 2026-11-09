@@ -5,20 +5,24 @@
 //********************************************* */
 
 const themeBtn = document.getElementById('theme-toggle')
+const html = document.documentElement
 
-if (localStorage.getItem('modo') == 'noturno') {
-    document.body.classList.add('modo-noturno')
+if (localStorage.getItem('modo') == 'dark') {
+    html.setAttribute('data-bs-theme', 'dark')
+    themeBtn.textContent = 'Tema claro'
 }
-themeBtn.addEventListener('click', function () {
-    document.body.classList.toggle('modo-noturno')
 
-    if (document.body.classList.contains('modo-noturno')) {
-        localStorage.setItem('modo', 'noturno')
+themeBtn.addEventListener('click', function () {
+    if (html.getAttribute('data-bs-theme') == 'dark') {
+        html.setAttribute('data-bs-theme', 'light')
+        themeBtn.textContent = 'Tema escuro'
+        localStorage.setItem('modo', 'light')
     } else {
-        localStorage.setItem('modo', 'claro')
+        html.setAttribute('data-bs-theme', 'dark')
+        themeBtn.textContent = 'Tema claro'
+        localStorage.setItem('modo', 'dark')
     }
 })
-
 
 //********************************************* */
 //********************************************* */
